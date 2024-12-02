@@ -31,7 +31,6 @@ pub fn main() !void {
     std.mem.sort(i32, list2.items, {}, std.sort.asc(i32));
 
     var totalDiff: u32 = 0;
-
     if (list1.items.len == list2.items.len) {
         for (list1.items, list2.items) |list1Value, list2Value| {
             const diff = @abs(list1Value - list2Value);
@@ -51,5 +50,6 @@ pub fn main() !void {
         }
         similarityScore += occurences * value;
     }
+
     print("Similarity Score: {}\n", .{similarityScore});
 }
