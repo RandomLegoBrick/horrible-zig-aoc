@@ -14,8 +14,6 @@ pub fn main() !void {
     const buffer = try allocator.alloc(u8, file_size + 1);
     defer allocator.free(buffer);
 
-    var totalDistance: i64 = 0;
-
     var list1 = std.ArrayList(i32).init(allocator);
     defer list1.deinit();
 
@@ -23,20 +21,10 @@ pub fn main() !void {
     defer list2.deinit();
 
     while (try file.reader().readUntilDelimiterOrEof(buffer, '\n')) |line| {
-        totalDistance += 1;
-
         var distances = std.mem.splitSequence(u8, line, "   ");
-        var n: u8 = 0;
-        while (distances.next()) |value| {
-            const int = try std.fmt.parseInt(i32, value, 10);
 
-            if (n == 0) {
-                try list1.append(int);
-            } else if (n == 1) {
-                try list2.append(int);
-            }
-            n += 1;
-        }
+        try list1.append(try std.fmt.parseInt(i32, distances.next().?, 10));
+        try list2.append(try std.fmt.parseInt(i32, distances.next().?, 10));
     }
 
     std.mem.sort(i32, list1.items, {}, std.sort.asc(i32));
@@ -51,7 +39,7 @@ pub fn main() !void {
         }
     }
 
-    print("-------------------------\nTotal Difference: {}\n", .{totalDiff});
+    print("\nTotal Difference: {}\n", .{totalDiff});
 
     var similarityScore: i32 = 0;
     for (list1.items) |value| {
